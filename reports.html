@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Insights</title>
+    <style>
+        :root { --m-black: #0d0d0d; --m-gray: #1a1a1a; --m-pink: #0026fd; }
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: var(--m-black); color: #eee; margin: 0; }
+        .c { background: var(--m-gray); padding: 25px; border-radius: 2px; max-width: 400px; margin: 20px auto; border: 1px solid #333; border-left: 4px solid var(--m-pink); box-shadow: 10px 10px 0px #000; }
+        h3 { color: var(--m-pink); text-transform: uppercase; letter-spacing: 3px; display: flex; align-items: center; gap: 10px; margin-top: 0; }
+        .stat-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #333; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 12px 0; border-top: 2px solid var(--m-pink); }
+        .nav-item { color: #555; text-decoration: none; text-align: center; font-size: 0.7rem; font-weight: bold; flex: 1; }
+        .nav-item.active { color: var(--m-pink); }
+        .nav-item i { display: block; font-size: 1.3rem; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="c">
+    <h3><i class="fas fa-brain"></i> Insights</h3>
+    <div class="stat-row"><span>Spent Today</span> <span id="r-total">P0</span></div>
+    <div class="stat-row"><span>Wallet Balance</span> <span id="r-wallet">P0</span></div>
+</div>
+
+<nav class="nav-bar">
+    <a href="index.html" class="nav-item"><i class="fas fa-home"></i>MAIN</a>
+    <a href="wallet.html" class="nav-item"><i class="fas fa-vault"></i>WALLET</a>
+    <a href="reports.html" class="nav-item active"><i class="fas fa-brain"></i>INSIGHTS</a>
+</nav>
+
+<script>
+    window.onload = () => {
+        document.getElementById('r-total').innerText = "P" + (localStorage.getItem("total_spent") || 0);
+        document.getElementById('r-wallet').innerText = "P" + (localStorage.getItem("e_wallet") || 0);
+    }
+</script>
+</body>
+</html>

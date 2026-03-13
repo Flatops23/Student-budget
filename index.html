@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Budget Tracker</title>
+    <style>
+        :root { --m-black: #0d0d0d; --m-gray: #1a1a1a; --m-pink: #0026fd; --m-glow: rgba(0, 38, 253, 0.4); }
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: var(--m-black); color: #eee; margin: 0; padding-bottom: 90px; }
+        .c { background: var(--m-gray); padding: 25px; border-radius: 2px; max-width: 400px; margin: 20px auto; border: 1px solid #333; border-left: 4px solid var(--m-pink); box-shadow: 10px 10px 0px #000; position: relative; overflow: hidden; }
+        .c::after { content: ""; position: absolute; top: 0; right: 0; border-width: 0 20px 20px 0; border-style: solid; border-color: var(--m-pink) var(--m-black); }
+        h3 { color: var(--m-pink); text-transform: uppercase; letter-spacing: 3px; display: flex; align-items: center; gap: 10px; margin-top: 0; }
+        .amt-display { font-family: 'Courier New', monospace; font-size: 2.5rem; margin-bottom: 20px; color: #fff; text-shadow: 0 0 10px var(--m-glow); }
+        input { width: 100%; box-sizing: border-box; margin-bottom: 10px; padding: 12px; background: #000; border: 1px solid #444; color: var(--m-pink); outline: none; }
+        button { width: 100%; padding: 12px; background: var(--m-pink); color: #000; border: none; cursor: pointer; font-weight: 900; text-transform: uppercase; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%); }
+        ul { list-style: none; padding: 0; margin-top: 25px; }
+        li { padding: 12px; background: rgba(255, 255, 255, 0.03); border-bottom: 1px solid #333; display: flex; justify-content: space-between; font-size: 0.9rem; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 12px 0; border-top: 2px solid var(--m-pink); z-index: 1000; }
+        .nav-item { color: #555; text-decoration: none; text-align: center; font-size: 0.7rem; font-weight: bold; flex: 1; }
+        .nav-item.active { color: var(--m-pink); }
+        .nav-item i { display: block; font-size: 1.3rem; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+<div id="app" class="c">
+    <h3><i class="fas fa-terminal"></i> Budget</h3>
+    <div class="amt-display">P<span id="bal">0</span></div>
+    <input type="text" id="desc" placeholder="Item">
+    <input type="number" id="amt" placeholder="Amount">
+    <button onclick="add()"><i class="fas fa-plus"></i> Add</button>
+    <ul id="list"></ul>
+</div>
+
+<nav class="nav-bar">
+    <a href="index.html" class="nav-item active"><i class="fas fa-home"></i>MAIN</a>
+    <a href="wallet.html" class="nav-item"><i class="fas fa-vault"></i>WALLET</a>
+    <a href="reports.html" class="nav-item"><i class="fas fa-brain"></i>INSIGHTS</a>
+</nav>
+
+<script>
+const b = document.getElementById('bal');
+const d = document.getElementById('desc');
+const a = document.getElementById('amt');
+const l = document.getElementById('list');
+
+function refresh() {
+    let items = JSON.parse(localStorage.getItem("budget_list")) || [];
+    l.innerHTML = "";
+    let total = 0;
+    items.forEach(item => {
+        total += item.val;
+        let i = document.createElement('li');
+        i.innerHTML = `<span><i class="fas fa-caret-right" style="color:var(--m-pink)"></i> ${item.name}</span> <span>P${item.val}</span>`;
+        l.appendChild(i);
+    });
+    b.innerText = total;
+    localStorage.setItem("total_spent", total);
+}
+
+function add() {
+  let v = parseFloat(a.value);
+  let n = d.value;
+  if (n && v) {
+    let items = JSON.parse(localStorage.getItem("budget_list")) || [];
+    items.push({ name: n, val: v });
+    localStorage.setItem("budget_list", JSON.stringify(items));
+    d.value = ""; a.value = "";
+    refresh();
+  }
+}
+
+window.onload = refresh;
+
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js");
+}
+</script>
+</body>
+</html>
